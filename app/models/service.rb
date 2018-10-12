@@ -36,7 +36,9 @@ class Service < ApplicationRecord
   end
 
   def self.create_service(service)
-    customer = Customer.find_customer(service[:cust_id], service[:name])
+    customer = Customer.find_or_create_by(customer_id: service[:cust_id]) do |customer|
+      customer.name = service[:name]
+    end
 
     Service.create(
       service_id: service[:id],
