@@ -59,5 +59,16 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
 require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true)
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    # Choose a test framework:
+    with.test_framework :rspec
+
+    # Or, choose all of the above:
+    with.library :rails
+  end
+end
