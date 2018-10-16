@@ -24,31 +24,31 @@ describe Service, type: :model do
 
       context "the configuration is active" do
         before(:each) do
-          @service = {id: "4iF5WsVstlE4TauZYacuyO",
-                       customer: "Jonathan Foote",
+          @service = {id: "fake service id",
+                       customer: "fake customer name",
                        name: "testing",
                        active: 1,
                        number: 2,
-                       cust_id: "6ARY9ZJiyoSmIXMwG16qw0"}
+                       cust_id: "fake customer id"}
         end
 
         context "a service already exists" do
           context "the active version is different that new version" do
             it "updates the service" do
-              customer = Customer.create(customer_id: "6ARY9ZJiyoSmIXMwG16qw0",
-                                          name: "Jonathan Foote")
+              customer = Customer.create(customer_id: "fake customer id",
+                                          name: "fake customer name")
 
-              Service.create(service_id: "4iF5WsVstlE4TauZYacuyO",
+              Service.create(service_id: "fake service id",
                               service_name: "test",
                               active_version: 1,
                               customer_id: customer.id)
 
               result = Service.process_service(@service)
 
-              service = Service.find_by(service_id: "4iF5WsVstlE4TauZYacuyO")
+              service = Service.find_by(service_id: "fake service id")
 
               expect(result).to eq true
-              expect(service.service_id).to eq "4iF5WsVstlE4TauZYacuyO"
+              expect(service.service_id).to eq "fake service id"
               expect(service.service_name).to eq "testing"
               expect(service.active_version).to eq 2
               expect(service.previous_version).to eq 1
@@ -57,17 +57,17 @@ describe Service, type: :model do
 
           context "the active version is the same as the new version" do
             it "does not update the service and returns nil" do
-              customer = Customer.create(customer_id: "6ARY9ZJiyoSmIXMwG16qw0",
-                                          name: "Jonathan Foote")
+              customer = Customer.create(customer_id: "fake customer id",
+                                          name: "fake customer name")
 
-              Service.create(service_id: "4iF5WsVstlE4TauZYacuyO",
+              Service.create(service_id: "fake service id",
                               service_name: "test",
                               active_version: 2,
                               customer_id: customer.id)
 
               result = Service.process_service(@service)
 
-              service = Service.find_by(service_id: "4iF5WsVstlE4TauZYacuyO")
+              service = Service.find_by(service_id: "fake service id")
 
               expect(result).to be nil
               expect(service.service_name).to eq "test"
@@ -78,18 +78,44 @@ describe Service, type: :model do
         end
 
         context "it is a new service" do
-          it "creates a new service" do
-            expect(Service.count).to eq 0
+          context "the customer already exists" do
+            it "creates a new service for that customer" do
+              customer = Customer.create(customer_id: "fake customer id",
+                                          name: "fake customer name")
 
-            result = Service.process_service(@service)
+              expect(Service.count).to eq 0
+              expect(Customer.count).to eq 1
 
-            service = Service.find_by(service_id: "4iF5WsVstlE4TauZYacuyO")
+              result = Service.process_service(@service)
 
-            expect(result).to eq service
-            expect(Service.count).to eq 1
-            expect(service.service_name).to eq "testing"
-            expect(service.active_version).to eq 2
-            expect(service.previous_version).to eq nil
+              service = Service.find_by(service_id: "fake service id")
+
+              expect(result).to eq service
+              expect(Service.count).to eq 1
+              expect(Customer.count).to eq 1
+              expect(service.service_name).to eq "testing"
+              expect(service.active_version).to eq 2
+              expect(service.previous_version).to eq nil
+              expect(service.customer.name).to eq "fake customer name"
+            end
+          end
+
+          context "the customer does not exist" do
+            it "creates a new customer and a new service" do
+              expect(Service.count).to eq 0
+              expect(Customer.count).to eq 0
+
+              result = Service.process_service(@service)
+
+              service = Service.find_by(service_id: "fake service id")
+
+              expect(result).to eq service
+              expect(Service.count).to eq 1
+              expect(Customer.count).to eq 1
+              expect(service.service_name).to eq "testing"
+              expect(service.active_version).to eq 2
+              expect(service.previous_version).to eq nil
+            end
           end
         end
       end

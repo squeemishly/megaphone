@@ -7,7 +7,7 @@ describe UpdatedServicesProcessor do
 
       response = Faraday.new do |builder|
         builder.adapter :test, stubs do |stub|
-          stub.get('/pings') { |env| [ 200, {}, "[{\"id\":\"4v6h6swWZaT0GMz948Q2x8\"}]" ]}
+          stub.get('/pings') { |env| [ 200, {}, "[{\"id\":\"fake id\"}]" ]}
         end
       end
 
@@ -16,13 +16,13 @@ describe UpdatedServicesProcessor do
 
       allow(Service).to receive(:process_service)
         .with(pretty_resp.first)
-        .and_return([{id:"4v6h6swWZaT0GMz948Q2x8"}])
+        .and_return([{id:"fake id"}])
 
       result = UpdatedServicesProcessor.process(resp)
 
       expect(result).to be_a Array
       expect(result.first).to be_a Hash
-      expect(result).to eq [{:id=>"4v6h6swWZaT0GMz948Q2x8"}]
+      expect(result).to eq [{:id=>"fake id"}]
     end
   end
 end
