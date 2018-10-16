@@ -9,7 +9,8 @@ describe "UpdatedServicesPinger.ping" do
          }).
        to_return(status: 200, body: "[{\"id\":\"fake_id\",\"customer\":\"fake_customer_name\",\"name\":\"fake_service_name\",\"generation\":1,\"updated\":\"2018-10-04T15:21:14Z\",\"active\":null,\"number\":284,\"cust_id\":\"fake_customer_id\"}]", headers: {})
 
-    ping = UpdatedServicesPinger.ping
+    resp = UpdatedServicesPinger.ping
+    ping = JSON.parse(resp.body, symbolize_names: true)
 
     expect(ping).to be_an Array
     expect(ping.first).to be_an Hash
