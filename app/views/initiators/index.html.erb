@@ -1,3 +1,15 @@
 <h1>Welcome!</h1>
 
 <%= link_to "Ping Fastly", pings_path %>
+
+<% @services.each do |service| %>
+  <div>
+    Customer Name: <%= service.customer.name %><br/>
+    Service Name: <%= service.service_name %><br/>
+    Service ID: <%= service.service_id %><br/>
+    Active Version: <%= service.active_version %><br/>
+    <% if service.previous_version %>
+      Previous Version: <%= service.previous_version %><br/>
+    <% end %>
+  </div><br/>
+<% end %>

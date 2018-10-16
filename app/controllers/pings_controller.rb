@@ -1,6 +1,6 @@
 class PingsController < ApplicationController
   def index
-    UpdatedServicesPinger.ping
+    UpdateServices.update
 
     redirect_to root_path
   end
