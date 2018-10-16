@@ -14,7 +14,9 @@ describe UpdatedServicesProcessor do
       resp = response.get 'pings'
       pretty_resp = JSON.parse(resp.body, symbolize_names: true)
 
-      allow(Service).to receive(:process_service).with(pretty_resp.first).and_return([{id:"4v6h6swWZaT0GMz948Q2x8"}])
+      allow(Service).to receive(:process_service)
+        .with(pretty_resp.first)
+        .and_return([{id:"4v6h6swWZaT0GMz948Q2x8"}])
 
       result = UpdatedServicesProcessor.process(resp)
 
