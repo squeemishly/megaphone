@@ -8,7 +8,7 @@ class UpdatedServicesPinger
   end
 
   def ping
-    resp = @conn.get do |req|
+    @conn.get do |req|
       req.headers["Fastly-key"] = ENV["fastly_api_key"]
     end
   end

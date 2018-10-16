@@ -14,6 +14,7 @@ describe UpdateServices do
       resp = response.get 'pings'
 
       allow(UpdatedServicesPinger).to receive(:ping)
+        .once
         .and_return(resp)
 
       pretty_resp = JSON.parse(resp.body, symbolize_names: true)

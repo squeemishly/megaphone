@@ -6,5 +6,7 @@ class UpdateServices
     pretty_resp.each do |service|
       Service.process_service(service)
     end
+
+    return pretty_resp
   end
 end
