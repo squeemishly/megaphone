@@ -3,6 +3,8 @@ class Service < ApplicationRecord
 
   validates :service_id, :service_name, :active_version, :customer_id, presence: true
 
+  scope :most_recent, -> { all.order(:updated_at).reverse }
+
   def self.process_service(service)
     if service[:active]
       create_or_update_service(service)
