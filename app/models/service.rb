@@ -4,16 +4,12 @@ class Service < ApplicationRecord
   validates :service_id, :service_name, :active_version, :customer_id, presence: true
 
   def self.process_service(service)
-    if active_configuration?(service[:active])
+    if service[:active]
       create_or_update_service(service)
     end
   end
 
   private
-
-  def self.active_configuration?(service)
-    service != nil
-  end
 
   def self.create_or_update_service(raw_service)
     saved_service = Service.find_by(service_id: raw_service[:id])
